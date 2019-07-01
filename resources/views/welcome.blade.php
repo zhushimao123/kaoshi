@@ -15,6 +15,33 @@
 </div>
 <input type="text" id="text">
 <button id="btn">发送</button>
+<script>
+    $(function () {
+        var str = window.prompt("请输入用户名","")
+        var name = str;
+        var web = new WebSocket("ws://192.168.30.206:9507");
+        // console.log(web);
+        web.onopen = function () {
+             $('#btn').click(function () {
+                         //群聊
+                         var content = $('#text').val();
+                         console.log(content);
+                         var data = {
+                             text:content,
+                             name:name,
+                         }
+                         web.send(JSON.stringify(data));
+                         $('#text').val('');
+             });
+        }
+        web.onmessage = function(d){  //接受服务端推送数据
+            // console.log(d);
+            var data = JSON.parse(d.data);
+            console.log(data);
+            $('#box').prepend('<a id="a"><font style="color: crimson"+>'+data.name+'</font></a>'+data.time+':   '+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+data.content+'<br>');
+        }
+    })
 
+</script>
 </body>
 </html>
